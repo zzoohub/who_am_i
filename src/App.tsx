@@ -1,22 +1,29 @@
-import { RecoilRoot } from 'recoil'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ThemeProvider } from 'styled-components'
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { theme } from './css/theme'
-import Router from './Router'
+import AppRoutes from './routes'
 import GlobalStyle from './css/GlobalStyle'
+import { AppProvider } from './context'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+})
 
 function App() {
   return (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient}>
+      <AppProvider>
         <ThemeProvider theme={theme}>
           <GlobalStyle />
-          <Router />
+          <AppRoutes />
         </ThemeProvider>
-      </QueryClientProvider>
-    </RecoilRoot>
+      </AppProvider>
+    </QueryClientProvider>
   )
 }
 
